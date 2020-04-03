@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -89,11 +90,25 @@ public class PlayerCommandListener implements CommandExecutor {
 					break;
 				// list up worlds current set for nametag hiding 
 				case "list":
-			        sender.sendMessage(ChatColor.GOLD + "|=======NametagHide=======|");
-			        sender.sendMessage(ChatColor.LIGHT_PURPLE + "Enabled for the following worlds:");
-			        for (String world : NametagHide.getInstance().hideIn) {
-			        	sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + world);
-			        }
+					if (args.length == 1 || (worlds.contains("on") && args.length > 1)) {
+						if (NametagHide.getInstance().hideIn.size() == 0) {
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Nametag hiding is not enabled on any worlds");
+						} else {
+							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Enabled for the following worlds:");
+							for (String world : NametagHide.getInstance().hideIn) {
+								sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + world);
+							}
+						}
+					} else if (worlds.contains("worlds") && args.length > 1) {
+						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Worlds on this server:");
+						for (World w : Bukkit.getWorlds()) {
+							if (NametagHide.getInstance().hideIn.contains(w.getName())) {
+								sender.sendMessage(ChatColor.LIGHT_PURPLE + "   *" + w.getName());
+							} else {
+								sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + w.getName());
+							}
+						}
+					}
 			        break;
 				default:
 					Usage(sender);
@@ -114,11 +129,11 @@ public class PlayerCommandListener implements CommandExecutor {
 	}
 	
     void Usage(CommandSender sender) {
-        sender.sendMessage(ChatColor.GOLD + "|=======NametagHide=======|");
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide" + ChatColor.GOLD + " - Display this menu");
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide on  <worldname> ..." + ChatColor.GOLD + " - Switch on  for worlds (space separated)");
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide off <worldname> ..." + ChatColor.GOLD + " - Switch off for worlds (space separated)");
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide list" + ChatColor.GOLD + " - List worlds currently hiding player nametags");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide list [on]" + ChatColor.GOLD + " - List worlds currently hiding player nametags");
+        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide list worlds" + ChatColor.GOLD + " - List worlds in the server");
         sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide remove" + ChatColor.GOLD + " - remove world from config directly");
     }
 }
