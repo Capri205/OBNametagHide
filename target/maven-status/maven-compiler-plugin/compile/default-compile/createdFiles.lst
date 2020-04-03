@@ -1,0 +1,4 @@
+net\obmc\NametagHide\ConfigManager.class
+net\obmc\NametagHide\NametagHide.class
+net\obmc\NametagHide\PlayerJoinListener.class
+net\obmc\NametagHide\PlayerCommandListener.class

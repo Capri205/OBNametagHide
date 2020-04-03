@@ -1,0 +1,7 @@
+# Config file for OBNametagHide
+#
+
+hideIn:
+- world
+- world_nether
+- world_the_end
