@@ -1,8 +1,8 @@
 website: http://ob-mc.net
-version: 0.1
-api-version: 1.15 
-name: NametagHide 
+name: NametagHide
 author: Fahrenheit451
+version: 1.0
+api-version: 1.17
 main: net.obmc.NametagHide.NametagHide
 description: Hides name tag in worlds listed in the configuration file
 commands:
