@@ -1,4 +1,4 @@
-package net.obmc.NametagHide;
+package net.obmc.OBNametagHide;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

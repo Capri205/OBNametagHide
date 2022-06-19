@@ -1,4 +1,4 @@
-package net.obmc.NametagHide;
+package net.obmc.OBNametagHide;
 
 import java.util.logging.Logger;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -16,13 +16,13 @@ public class PlayerJoinListener implements Listener
     // catch player join events
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent event) {
-        NametagHide.getInstance().checkPlayer(event.getPlayer());
+        OBNametagHide.getInstance().checkPlayer(event.getPlayer());
     }
     
     // catch player changing world events
     @EventHandler
     public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-    	NametagHide.getInstance().checkPlayer(event.getPlayer());
+    	OBNametagHide.getInstance().checkPlayer(event.getPlayer());
     }
 }
 

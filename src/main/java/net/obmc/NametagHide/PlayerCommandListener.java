@@ -1,4 +1,4 @@
-package net.obmc.NametagHide;
+package net.obmc.OBNametagHide;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -47,8 +47,8 @@ public class PlayerCommandListener implements CommandExecutor {
 				// enable hiding for a world - has to be a valid world in the server and not already be set for hiding of course
 				case "on":
 					for (String world : worlds) {
-						if (NametagHide.getInstance().checkWorldExists(world)) {
-							if (NametagHide.getInstance().addWorld(world)) {
+						if (OBNametagHide.getInstance().checkWorldExists(world)) {
+							if (OBNametagHide.getInstance().addWorld(world)) {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Hiding player nametags in " + world);
 							} else {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Nametag hiding already on for " + world);
@@ -62,8 +62,8 @@ public class PlayerCommandListener implements CommandExecutor {
 				// disable hiding for a world - has to be a valid world in the server
 				case "off":
 					for (String world : worlds) {
-						if (NametagHide.getInstance().checkWorldExists(world)) {
-							if (NametagHide.getInstance().delWorld(world)) {
+						if (OBNametagHide.getInstance().checkWorldExists(world)) {
+							if (OBNametagHide.getInstance().delWorld(world)) {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player nametags now visible in " + world);
 							} else {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Nametag hiding isn't on for " + world);
@@ -77,8 +77,8 @@ public class PlayerCommandListener implements CommandExecutor {
                 // remove a world from the working list directly - useful for worls that were set but no longer exist
 				case "remove":
 					for (String world : worlds) {
-						if (NametagHide.getInstance().checkWorld(world)) {
-							if (NametagHide.getInstance().delWorld(world)) {
+						if (OBNametagHide.getInstance().checkWorld(world)) {
+							if (OBNametagHide.getInstance().delWorld(world)) {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Removed " + world + "from configuration");
 							} else {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + world + " not registered for nametag hiding");
@@ -91,18 +91,18 @@ public class PlayerCommandListener implements CommandExecutor {
 				// list up worlds current set for nametag hiding 
 				case "list":
 					if (args.length == 1 || (worlds.contains("on") && args.length > 1)) {
-						if (NametagHide.getInstance().hideIn.size() == 0) {
+						if (OBNametagHide.getInstance().hideIn.size() == 0) {
 							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Nametag hiding is not enabled on any worlds");
 						} else {
 							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Enabled for the following worlds:");
-							for (String world : NametagHide.getInstance().hideIn) {
+							for (String world : OBNametagHide.getInstance().hideIn) {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + world);
 							}
 						}
 					} else if (worlds.contains("worlds") && args.length > 1) {
 						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Worlds on this server:");
 						for (World w : Bukkit.getWorlds()) {
-							if (NametagHide.getInstance().hideIn.contains(w.getName())) {
+							if (OBNametagHide.getInstance().hideIn.contains(w.getName())) {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "   *" + w.getName());
 							} else {
 								sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + w.getName());
@@ -124,7 +124,7 @@ public class PlayerCommandListener implements CommandExecutor {
 	// update new state for players
 	void UpdatePlayers(CommandSender sender) {
 		for (Player p : sender.getServer().getOnlinePlayers()) {
-        	NametagHide.getInstance().checkPlayer(p);
+        	OBNametagHide.getInstance().checkPlayer(p);
         }
 	}
 	

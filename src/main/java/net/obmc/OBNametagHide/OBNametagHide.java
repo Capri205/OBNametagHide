@@ -1,4 +1,4 @@
-package net.obmc.NametagHide;
+package net.obmc.OBNametagHide;
 
 import java.io.File;
 import java.util.List;
@@ -16,15 +16,12 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
-import net.obmc.NametagHide.PlayerCommandListener;
-import net.obmc.NametagHide.ConfigManager;
 
-
-public class NametagHide extends JavaPlugin
+public class OBNametagHide extends JavaPlugin
 {
 	static Logger log = Logger.getLogger("Minecraft");
 	
-	public static NametagHide instance;
+	public static OBNametagHide instance;
 	
     private PlayerJoinListener listen;
 	public ConfigManager mlc;
@@ -32,12 +29,12 @@ public class NametagHide extends JavaPlugin
 	private Scoreboard score;
     public List<String> hideIn;
     
-    public NametagHide() {
+    public OBNametagHide() {
     	instance = this;
     }
     
     // make our (public) main class methods and variables available to other classes
-    public static NametagHide getInstance() {
+    public static OBNametagHide getInstance() {
     	return instance;
     }
     
@@ -148,7 +145,7 @@ public class NametagHide extends JavaPlugin
     		}
     	}
     	if (!hasteam) {
-    		if (NametagHide.getInstance().checkWorld(player.getWorld().getName())) {
+    		if (OBNametagHide.getInstance().checkWorld(player.getWorld().getName())) {
     			try {
     				Team newteam = this.score.registerNewTeam(player.getName());
     				newteam.addEntry(player.getName());
@@ -158,7 +155,7 @@ public class NametagHide extends JavaPlugin
     			}
     		}
     	} else {
-    		if (!NametagHide.getInstance().checkWorld(player.getWorld().getName())) {
+    		if (!OBNametagHide.getInstance().checkWorld(player.getWorld().getName())) {
     	    	for (Team tt : this.score.getTeams()) {
     	    		if (tt.getName().equals(player.getName())) {
     	    			tt.unregister();
