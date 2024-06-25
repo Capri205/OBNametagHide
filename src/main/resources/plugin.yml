@@ -3,7 +3,7 @@ name: NametagHide
 author: Fahrenheit451
 version: 1.0
 api-version: "1.21"
-main: net.obmc.NametagHide.NametagHide
+main: net.obmc.OBNametagHide.OBNametagHide
 description: Hides name tag in worlds listed in the configuration file
 commands:
   nametaghide:
