@@ -3,19 +3,22 @@
 
   <groupId>net.obmc</groupId>
   <artifactId>OBNametagHide</artifactId>
-  <version>1.0</version>
-  <packaging>jar</packaging>
   <name>OBNametagHide</name>
+  <version>1.1</version>
   <description>Allows player nametag hiding on worlds within the server.</description>
+  <url>http://ob-mc.net</url>
+  <packaging>jar</packaging>
 
   <properties>
+    <api-version>1.21</api-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <build>
 
-    <finalName>OBNametagHide</finalName>
+    <finalName>${project.name}-${project.version}</finalName>
 
+    <!-- ensure plugin.yml gets the version updated -->
     <resources>
       <resource>
         <targetPath>.</targetPath>
@@ -35,25 +38,30 @@
         <configuration>
           <source>21</source>
           <target>21</target>
+          <compilerArgs>
+            <arg>-Xlint:-options</arg>
+            <arg>-proc:full</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
     </plugins>
+
   </build>
 
   <repositories>
-<repository>
-    <id>papermc</id>
-    <url>https://repo.papermc.io/repository/maven-public/</url>
-</repository>
+    <repository>
+      <id>papermc</id>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
+    </repository>
   </repositories>
     
   <dependencies>
-<dependency>
-    <groupId>io.papermc.paper</groupId>
-    <artifactId>paper-api</artifactId>
-    <version>1.21-R0.1-SNAPSHOT</version>
-    <scope>provided</scope>
-</dependency>
+    <dependency>
+      <groupId>io.papermc.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.21.4-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
 </project>

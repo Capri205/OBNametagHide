@@ -1,16 +1,17 @@
 package net.obmc.OBNametagHide;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class PlayerCommandListener implements CommandExecutor {
 
@@ -21,7 +22,7 @@ public class PlayerCommandListener implements CommandExecutor {
 
 		// for now only op can use the command
 		if (!sender.isOp()) {
-			sender.sendMessage(ChatColor.RED + "Sorry, command is reserved for server operators.");
+			sender.sendMessage(Component.text("Sorry, command is reserved for server operators.", NamedTextColor.RED));
 			return true;
 		}
 
@@ -49,12 +50,12 @@ public class PlayerCommandListener implements CommandExecutor {
 					for (String world : worlds) {
 						if (OBNametagHide.getInstance().checkWorldExists(world)) {
 							if (OBNametagHide.getInstance().addWorld(world)) {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Hiding player nametags in " + world);
+								sender.sendMessage(Component.text("Hiding player nametags in world '" + world + "'", NamedTextColor.LIGHT_PURPLE));
 							} else {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Nametag hiding already on for " + world);
+								sender.sendMessage(Component.text("Nametag hiding already on for world '" + world + "'", NamedTextColor.LIGHT_PURPLE));
 							}
 						} else {
-							sender.sendMessage(ChatColor.RED + world + " is not a valid world.");
+							sender.sendMessage(Component.text("world '" + world + "' is not a valid world.", NamedTextColor.RED));
 						}
 					}
 					UpdatePlayers(sender);
@@ -64,24 +65,24 @@ public class PlayerCommandListener implements CommandExecutor {
 					for (String world : worlds) {
 						if (OBNametagHide.getInstance().checkWorldExists(world)) {
 							if (OBNametagHide.getInstance().delWorld(world)) {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player nametags now visible in " + world);
+								sender.sendMessage(Component.text("Player nametags now visible in world '" + world +"'", NamedTextColor.LIGHT_PURPLE));
 							} else {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Nametag hiding isn't on for " + world);
+								sender.sendMessage(Component.text("Nametag hiding isn't on for world '" + world + "'", NamedTextColor.LIGHT_PURPLE));
 							}
 						} else {
-							sender.sendMessage(ChatColor.RED + world + " is not a valid world.");
+							sender.sendMessage(Component.text("world '" + world + "' is not a valid world.", NamedTextColor.RED));
 						}
 					}
                     UpdatePlayers(sender);
                     break;
-                // remove a world from the working list directly - useful for worls that were set but no longer exist
+                // remove a world from the working list directly - useful for worlds that were set but no longer exist
 				case "remove":
 					for (String world : worlds) {
 						if (OBNametagHide.getInstance().checkWorld(world)) {
 							if (OBNametagHide.getInstance().delWorld(world)) {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "Removed " + world + "from configuration");
+								sender.sendMessage(Component.text("Removed world '" + world + "' from configuration", NamedTextColor.LIGHT_PURPLE));
 							} else {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + world + " not registered for nametag hiding");
+								sender.sendMessage(Component.text("world '" + world + "' not registered for nametag hiding", NamedTextColor.LIGHT_PURPLE));
 							}
 						}
 						
@@ -92,20 +93,20 @@ public class PlayerCommandListener implements CommandExecutor {
 				case "list":
 					if (args.length == 1 || (worlds.contains("on") && args.length > 1)) {
 						if (OBNametagHide.getInstance().hideIn.size() == 0) {
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Nametag hiding is not enabled on any worlds");
+							sender.sendMessage(Component.text("Nametag hiding is not enabled on any worlds", NamedTextColor.LIGHT_PURPLE));
 						} else {
-							sender.sendMessage(ChatColor.LIGHT_PURPLE + "Enabled for the following worlds:");
+							sender.sendMessage(Component.text("Enabled for the following worlds:", NamedTextColor.LIGHT_PURPLE));
 							for (String world : OBNametagHide.getInstance().hideIn) {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + world);
+								sender.sendMessage(Component.text("    " + world, NamedTextColor.LIGHT_PURPLE));
 							}
 						}
 					} else if (worlds.contains("worlds") && args.length > 1) {
-						sender.sendMessage(ChatColor.LIGHT_PURPLE + "Worlds on this server:");
+						sender.sendMessage(Component.text("Worlds on this server:", NamedTextColor.LIGHT_PURPLE));
 						for (World w : Bukkit.getWorlds()) {
 							if (OBNametagHide.getInstance().hideIn.contains(w.getName())) {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "   *" + w.getName());
+								sender.sendMessage(Component.text("   *" + w.getName(), NamedTextColor.LIGHT_PURPLE));
 							} else {
-								sender.sendMessage(ChatColor.LIGHT_PURPLE + "    " + w.getName());
+								sender.sendMessage(Component.text("    " + w.getName(), NamedTextColor.LIGHT_PURPLE));
 							}
 						}
 					}
@@ -129,11 +130,11 @@ public class PlayerCommandListener implements CommandExecutor {
 	}
 	
     void Usage(CommandSender sender) {
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide" + ChatColor.GOLD + " - Display this menu");
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide on  <worldname> ..." + ChatColor.GOLD + " - Switch on  for worlds (space separated)");
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide off <worldname> ..." + ChatColor.GOLD + " - Switch off for worlds (space separated)");
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide list [on]" + ChatColor.GOLD + " - List worlds currently hiding player nametags");
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide list worlds" + ChatColor.GOLD + " - List worlds in the server");
-        sender.sendMessage(ChatColor.LIGHT_PURPLE + "/nametaghide remove" + ChatColor.GOLD + " - remove world from config directly");
+        sender.sendMessage(Component.text("/nametaghide", NamedTextColor.LIGHT_PURPLE).append(Component.text(" - Display this menu", NamedTextColor.GOLD)));
+        sender.sendMessage(Component.text("/nametaghide on  <worldname> ...", NamedTextColor.LIGHT_PURPLE).append(Component.text(" - Switch on  for worlds (space separated)", NamedTextColor.GOLD)));
+        sender.sendMessage(Component.text("/nametaghide off <worldname> ...", NamedTextColor.LIGHT_PURPLE).append(Component.text(" - Switch off for worlds (space separated)", NamedTextColor.GOLD)));
+        sender.sendMessage(Component.text("/nametaghide list [on]", NamedTextColor.LIGHT_PURPLE).append(Component.text(" - List worlds currently hiding player nametags", NamedTextColor.GOLD)));
+        sender.sendMessage(Component.text("/nametaghide list worlds", NamedTextColor.LIGHT_PURPLE).append(Component.text(" - List worlds in the server", NamedTextColor.GOLD)));
+        sender.sendMessage(Component.text("/nametaghide remove <worldname>", NamedTextColor.LIGHT_PURPLE).append(Component.text(" - remove world from config", NamedTextColor.GOLD)));
     }
 }

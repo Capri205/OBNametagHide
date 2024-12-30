@@ -1,8 +1,6 @@
 package net.obmc.OBNametagHide;
 
-import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -16,15 +14,13 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
+public class OBNametagHide extends JavaPlugin {
 
-public class OBNametagHide extends JavaPlugin
-{
-	static Logger log = Logger.getLogger("Minecraft");
+    static Logger log = Logger.getLogger("Minecraft");
 	
 	public static OBNametagHide instance;
 	
     private PlayerJoinListener listen;
-	public ConfigManager mlc;
 	
 	private Scoreboard score;
     public List<String> hideIn;
@@ -40,58 +36,25 @@ public class OBNametagHide extends JavaPlugin
     
     // enable the plugin
     public void onEnable() {
+        // load up the worlds where we want to hide nametags in
+        this.saveDefaultConfig();
+        hideIn = this.getConfig().getStringList("hideIn");
+
     	this.score = this.getServer().getScoreboardManager().getMainScoreboard();
         this.listen = new PlayerJoinListener();
         this.getServer().getPluginManager().registerEvents((Listener)this.listen, (Plugin)this);
         this.getCommand("nametaghide").setExecutor(new PlayerCommandListener());
-		if (!manageConfigs()) {
-			return;
-		}
     }
-    
+
     // disable the plugin
     public void onDisable() {
-    	saveConfig();
+    	this.saveConfig();
     }
-    
+
     // return the player join listener if needed 
     public PlayerJoinListener getListen() {
         return this.listen;
     }
-
-    // save current configuration out to file
-    public void saveConfig() {
-    	log.log(Level.INFO, "[OBNametagHide] Saving configuration");
-    	mlc.getConfig().set("hideIn", hideIn);
-    	mlc.save();
-    }
-    
-    // load configuration from file
-	public void loadConfig() {
-		if (new File("plugins/NametagHide/config.yml").exists()) {
-			//log.log(Level.INFO, "[OBMetaProducer] config.yml successfully loaded.");
-		} else {
-			saveDefaultConfig();
-			log.log(Level.INFO, "[OBNametagHide] New config.yml has been created.");
-		}
-	}
-	
-	// load configuration or create a default configuration
-	public boolean manageConfigs() {
-		loadConfig();
-		try {
-			mlc = new ConfigManager(this);
-			hideIn = mlc.getConfig().getStringList("hideIn");
-		} catch (Exception e) {
-			log.log(Level.WARNING, "[OBNametagHide] Error occurred while loading config.");
-			e.printStackTrace();
-			this.getServer().getPluginManager().disablePlugin(this);
-			return false;
-		}
-		log.log(Level.INFO, "[OBNametagHide] Loaded configuration");
-		log.log(Level.INFO, "[OBNametagHide]     Name tags hidden in " + hideIn.size() + " worlds");
-		return true;
-	}
 
 	// check if a world is set for nametag hiding in our working list
 	public boolean checkWorld(String world) {
@@ -101,7 +64,7 @@ public class OBNametagHide extends JavaPlugin
     	}
     	return check;
 	}
-	
+
 	// add world to our working list (in memory - it's saved on server stop)
 	public boolean addWorld(String world) {
 		if (!hideIn.contains(world)) {
@@ -111,7 +74,7 @@ public class OBNametagHide extends JavaPlugin
 		}
 		return true;
 	}
-	
+
 	// check a world actually exists in the server
 	public boolean checkWorldExists(String world) {
 		for (World w : Bukkit.getWorlds()) {
@@ -121,12 +84,14 @@ public class OBNametagHide extends JavaPlugin
 		}
 		return false;
 	}
-	
+
 	// directly remove world from our working list
 	// useful when a world no longer exists
 	public boolean delWorld(String world) {
 		if (hideIn.contains(world)) {
 			hideIn.remove(hideIn.indexOf(world));
+			this.getConfig().set("hideIn", hideIn);
+			this.saveConfig();
 		} else {
 			return false;
 		}
@@ -145,7 +110,7 @@ public class OBNametagHide extends JavaPlugin
     		}
     	}
     	if (!hasteam) {
-    		if (OBNametagHide.getInstance().checkWorld(player.getWorld().getName())) {
+    		if (checkWorld(player.getWorld().getName())) {
     			try {
     				Team newteam = this.score.registerNewTeam(player.getName());
     				newteam.addEntry(player.getName());
@@ -155,7 +120,7 @@ public class OBNametagHide extends JavaPlugin
     			}
     		}
     	} else {
-    		if (!OBNametagHide.getInstance().checkWorld(player.getWorld().getName())) {
+    		if (!checkWorld(player.getWorld().getName())) {
     	    	for (Team tt : this.score.getTeams()) {
     	    		if (tt.getName().equals(player.getName())) {
     	    			tt.unregister();
@@ -165,5 +130,4 @@ public class OBNametagHide extends JavaPlugin
     		}
     	}
     }
-
 }
